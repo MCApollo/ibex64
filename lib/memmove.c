@@ -48,4 +48,10 @@ void *memcpy(void *dst, const void *src, size_t len)
   return dst;
 }
 
+#ifndef __APPLE__
 void *memmove(void *dest, const void *src, size_t n) __attribute__((alias("memcpy")));
+#else
+void *memmove(void *dest, const void *src, size_t n)
+    __asm__(".globl _memcpy");
+    __asm__(".set _memcpy, _memmove");
+#endif

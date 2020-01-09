@@ -18,23 +18,23 @@
 
 .PHONY: all clean distclean
 
-GNUARM_PREFIX ?= /opt/gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux/bin/aarch64-linux-gnu-
-#TARGET ?= iPad4,2/12B440/iBoot
+CROSS_COMPILE = aarch64-apple-darwin17-
 
-CC = $(GNUARM_PREFIX)gcc
+CC = $(CROSS_COMPILE)clang
 CFLAGS = -Wall -W -pedantic
 CFLAGS += -Wno-long-long
 CFLAGS += -Os
+# CFLAGS += -arch arm64 -miphoneos-version-min=11.0
 
-LD = $(GNUARM_PREFIX)gcc
-LDFLAGS = -L. -nostdlib -Wl,--build-id=none
-LDFLAGS += -Tscript.ld
+LD = $(CROSS_COMPILE)clang
+LDFLAGS = -L. -nostdlib
+# LDFLAGS += -arch arm64
 LDLIBS = -lp
 
-AR = $(GNUARM_PREFIX)ar
+AR = $(CROSS_COMPILE)ar
 ARFLAGS = crus
 
-OBJCOPY = $(GNUARM_PREFIX)objcopy
+OBJCOPY = $(CROSS_COMPILE)objcopy
 
 ifeq ($(TARGET),)
 #LDFLAGS += -Ttext=0x800000000
@@ -74,10 +74,10 @@ LIBOBJECTS = $(addsuffix .o, $(basename $(LIBSOURCES)))
 
 all: payload
 
-payload: payload.elf
+payload: payload.darwin
 	$(OBJCOPY) -O binary $< $@
 
-payload.elf: $(OBJECTS) | entry.o libp.a
+payload.darwin: $(OBJECTS) | entry.o libp.a
 	$(LD) -o $@ $(LDFLAGS) $^ $(LDLIBS)
 
 libp.a: $(LIBOBJECTS)

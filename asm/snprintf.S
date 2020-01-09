@@ -20,7 +20,6 @@
 #define lr x30
 
 	.global	_snprintf
-	.type	_snprintf, %function
 _snprintf:
 	stp	fp, lr, [sp, #-16]!
 	mov	fp, sp
@@ -42,4 +41,3 @@ _snprintf:
 
 	ldp	fp, lr, [sp], #16
 	ret
-	.size	_snprintf, .-_snprintf

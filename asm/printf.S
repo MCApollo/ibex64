@@ -20,7 +20,6 @@
 #define lr x30
 
 	.global	_printf
-	.type	_printf, %function
 _printf:
 	stp	fp, lr, [sp, #-16]!
 	mov	fp, sp
@@ -42,4 +41,3 @@ _printf:
 
 	ldp	fp, lr, [sp], #16
 	ret
-	.size	_printf, .-_printf

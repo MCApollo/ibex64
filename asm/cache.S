@@ -17,10 +17,8 @@
 
 
 	.global	flush_cache
-	.type	flush_cache, %function
 flush_cache:
 	ic	iallu
 	dsb	sy
 	isb
 	ret
-	.size	flush_cache, .-flush_cache

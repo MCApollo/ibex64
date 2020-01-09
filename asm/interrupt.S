@@ -17,8 +17,6 @@
 
 
 	.global	disable_int
-	.type	disable_int, %function
 disable_int:
 	msr	daifset, #3
 	ret
-	.size	disable_int, .-disable_int

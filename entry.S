@@ -17,9 +17,7 @@
 
 
 	.global	_start
-	.type	_start, %function
 _start:
 //	adrp	x8, __bss_start__
 //	add	x8, x8, :lo12:__bss_start__
 	b	_main
-	.size	_start, .-_start

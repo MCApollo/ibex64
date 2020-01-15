@@ -19,8 +19,8 @@
 #define fp x29
 #define lr x30
 
-	.global	_snprintf
-_snprintf:
+	.global	__snprintf
+__snprintf:
 	stp	fp, lr, [sp, #-16]!
 	mov	fp, sp
 
@@ -29,7 +29,7 @@ _snprintf:
 	stp	x3, x4, [sp, #-16]!
 	stp	x1, x2, [sp, #-16]!
 
-	bl	get_snprintf_addr
+	bl	_get_snprintf_addr
 	mov	x3, x0
 	ldr	x0, [sp, #56]
 	ldp	x1, x2, [sp], #16

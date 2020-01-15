@@ -16,8 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-	.global	flush_cache
-flush_cache:
+	.global	_flush_cache
+_flush_cache:
 	ic	iallu
 	dsb	sy
 	isb

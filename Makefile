@@ -21,20 +21,22 @@
 CROSS_COMPILE = aarch64-apple-darwin17-
 
 CC = $(CROSS_COMPILE)clang
-CFLAGS = -Wall -W -pedantic
+CFLAGS = -Wall -W -pedantic -fno-stack-protector
 CFLAGS += -Wno-long-long
 CFLAGS += -Os
 # CFLAGS += -arch arm64 -miphoneos-version-min=11.0
 
 LD = $(CROSS_COMPILE)clang
-LDFLAGS = -L. -nostdlib
+LDFLAGS = -L. -nostdlib -r
 # LDFLAGS += -arch arm64
-LDLIBS = -lp
+LDFLAGS += -Wl,-order_file,helper.def -e "__start"
+LDLIBS = -lp 
+#LDLIBS += -lm
 
 AR = $(CROSS_COMPILE)ar
 ARFLAGS = crus
 
-OBJCOPY = $(CROSS_COMPILE)objcopy
+# OBJCOPY = $(CROSS_COMPILE)objcopy
 
 ifeq ($(TARGET),)
 #LDFLAGS += -Ttext=0x800000000
@@ -46,7 +48,8 @@ CFLAGS += -I.
 
 SOURCES = \
 	link.c \
-	main.c
+	main.c \
+	helper.c
 
 LIBSOURCES = \
 	asm/cache.S \
@@ -75,7 +78,8 @@ LIBOBJECTS = $(addsuffix .o, $(basename $(LIBSOURCES)))
 all: payload
 
 payload: payload.darwin
-	$(OBJCOPY) -O binary $< $@
+	$(CROSS_COMPILE)ld -r $< -o $@
+#	$(OBJCOPY) -O binary $< $@
 
 payload.darwin: $(OBJECTS) | entry.o libp.a
 	$(LD) -o $@ $(LDFLAGS) $^ $(LDLIBS)
@@ -84,7 +88,7 @@ libp.a: $(LIBOBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
 
 clean:
-	-$(RM) *.o *.elf *.a $(LIBOBJECTS)
+	-$(RM) *.o *.payload *.a $(LIBOBJECTS)
 
 distclean: clean
 	-$(RM) payload
